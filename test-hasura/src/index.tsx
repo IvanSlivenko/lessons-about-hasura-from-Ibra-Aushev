@@ -10,7 +10,7 @@ export const client = new ApolloClient({
   uri: 'http://localhost:8080/v1/graphql',
   cache: new InMemoryCache(),
   headers: {
-    "x-yasura-adminisecret": "myadminsecretkey",
+    "x-hasura-admin-secret": "myadminsecretkey",
   }
 });
 
