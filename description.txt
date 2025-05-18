@@ -1,0 +1,30 @@
+---------------------------------------------- Lesson 1
+
+https://youtu.be/P6RL9qCW6ew
+
+
+yarn create react-app test-hasura --template typescript
+
+yarn add typescript @types/node @types/react @types/react-dom @types/jest
+
+yarn start
+
+
+.......................................................................... install hasura
+https://github.com/hasura/graphql-engine/tree/master/install-manifests
+
+https://github.com/hasura/graphql-engine/tree/master/install-manifests/docker-compose
+
+............................................... запуск hasura
+docker-compose up -d
+
+
+
+
+
+yarn add graphql
+yarn add @apollo/client
+yarn add sass
+yarn add macro-css
+==============================================
+00 : 16 : 05
