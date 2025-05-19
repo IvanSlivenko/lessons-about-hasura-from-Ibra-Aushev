@@ -18,6 +18,20 @@ https://github.com/hasura/graphql-engine/tree/master/install-manifests/docker-co
 ............................................... запуск hasura
 docker-compose up -d
 
+hasura console
+
+
+
+...................................................................... Create hasura project
+
+hasura init hasura-project \
+  --endpoint http://localhost:8080 \
+  --admin-secret myadminsecretkey
+
+
+......................................................................
+
+
 
 
 
@@ -26,5 +40,20 @@ yarn add graphql
 yarn add @apollo/client
 yarn add sass
 yarn add macro-css
+
+
+
+................................................................frontend
+
+https://github.com/Archakov06/react-sneakers
+
+yarn add react-router-dom
+
+
+--------------------------------------------
+hasura console
+
+
+--------------------------------------------
 ==============================================
-00 : 20 : 20
+00 : 33 : 48
