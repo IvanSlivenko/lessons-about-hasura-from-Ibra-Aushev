@@ -1,4 +1,17 @@
-import { gql } from "@apollo/client";
+export const GET_ALL_ITEMS = gql`
+  query GetAllItems {
+    items {
+      id
+      imageUrl: image_url
+      price
+      title
+    }
+  }
+`;
+
+
+
+
 
 export const GET_ALL_ITEMS = gql`
   query GetAllItems($searchValue: String!)  {
@@ -10,6 +23,3 @@ export const GET_ALL_ITEMS = gql`
   }
   }
 `;
-
-
-

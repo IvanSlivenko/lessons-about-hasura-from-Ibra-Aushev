@@ -15,12 +15,14 @@
     "graphql": "^16.11.0",
     "macro-css": "^1.0.5",
     "react": "^19.1.0",
+    "react-content-loader": "^7.0.2",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.0",
     "react-scripts": "5.0.1",
     "sass": "^1.89.0",
     "test-hasura": "file:",
     "typescript": "^4.4.2",
+    "use-debounce": "^10.0.4",
     "web-vitals": "^2.1.0"
   },
   "scripts": {
