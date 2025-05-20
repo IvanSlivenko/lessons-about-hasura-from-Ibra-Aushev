@@ -1,0 +1,7 @@
+table:
+  name: cart
+  schema: public
+object_relationships:
+  - name: item
+    using:
+      foreign_key_constraint_on: sneaker_id
