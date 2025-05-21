@@ -10,7 +10,7 @@ type Props = {
   setSearchValue: (value: string)=> void;
   onChangeSearchInput: (value: string)=> void;
   onAddToFavorite: (value: string)=> void;
-  onAddToCart: (value: unknown)=> void;
+  onAddToCart: (value: Sneakers)=> void;
   isLoading: boolean;
 };
 

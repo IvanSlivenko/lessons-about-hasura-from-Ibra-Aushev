@@ -8,3 +8,9 @@ export interface Sneakers {
 export interface Items {
   items: Sneakers[];
 }
+
+export interface CartItem {
+  id: string;
+  quantity: number;
+  sneaker: Sneakers;
+}
