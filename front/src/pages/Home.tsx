@@ -1,8 +1,8 @@
 import React from "react";
 
 import Card from "../components/Card";
-import { Items, Sneakers } from "../interfaces"
-import { data } from "react-router-dom";
+import { AddCartItem, CartItem, Items, Sneakers } from "../interfaces"
+import { useCart } from "../hooks/useCart";
 
 type Props = {
   items:  Sneakers[]
@@ -10,7 +10,7 @@ type Props = {
   setSearchValue: (value: string)=> void;
   onChangeSearchInput: (value: string)=> void;
   onAddToFavorite: (value: string)=> void;
-  onAddToCart: (value: Sneakers)=> void;
+  onAddToCart: (value: AddCartItem)=> void;
   isLoading: boolean;
 };
 
@@ -25,6 +25,18 @@ function Home({
 }: Props ) {
 
    
+  const { cartItems } = useCart();
+
+
+  const makeComposeSneakerAndCartObject = (item: Sneakers): AddCartItem => {
+  const cartItem = cartItems.find((cartItem) => cartItem.sneaker.id === item.id);
+  return {
+    id: item.id,
+    price: item.price,
+    lastQuantity: cartItem ? cartItem.quantity : 0,
+  };
+};
+
 
   const renderItems = () => {
     const filtredItems = items.filter((item) =>
@@ -34,10 +46,10 @@ function Home({
     return (isLoading ? [...Array(8)] : filtredItems).map((item, index) => (
       <Card
         key={index}
-        // imageUrl={data}
         onFavorite={() => onAddToFavorite(item)}
-        onPlus={() => onAddToCart(item)}
+        onPlus={() => onAddToCart(makeComposeSneakerAndCartObject(item))}
         loading={isLoading}
+        isItemAdded={cartItems.filter(filteritem => filteritem.sneaker.id === item.id).length}
         {...item}
       />
     ));

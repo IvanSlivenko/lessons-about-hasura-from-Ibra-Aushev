@@ -1,21 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 
-import { Items, Sneakers } from "./interfaces";
+import {
+  CartItem,
+  CartItems,
+  Items,
+  Sneakers,
+  AddCartItem,
+} from "./interfaces";
 import { useLazyQuery, useQuery, useMutation } from "@apollo/client";
-import { ADD_ITEM_TO_CART, GET_ALL_ITEMS, GET_CART } from "./queries";
+import {
+  ADD_ITEM_TO_CART,
+  GET_ALL_ITEMS,
+  GET_CART,
+  REMOVE_ITEM_FROM_CART,
+} from "./queries";
 import Home from "./pages/Home";
 
 import Header from "./components/index";
 import { useDebounce } from "./hooks/useDebounce";
 import Drawer from "./components/Drawer";
+import AppContext from "./context";
+import { client } from "./index";
 
 function App() {
   const [drawerOpened, setDrawerOpened] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearchTerm = useDebounce(searchValue, 500);
 
-  const { data: cartItems } = useQuery(GET_CART);
+  const { data: cartItems } = useQuery<CartItems>(GET_CART);
 
   const [loadSneakers, { data, error, loading }] = useLazyQuery<Items>(
     GET_ALL_ITEMS,
@@ -25,28 +38,73 @@ function App() {
   );
 
   const [addToCartMutation] = useMutation(ADD_ITEM_TO_CART);
+  const [removeItemFromCartMutation] = useMutation(REMOVE_ITEM_FROM_CART);
 
   const handleChangeInput = (value: string) => setSearchValue(value);
 
-  const handleAddToCart = (item: Sneakers) => {
-    addToCartMutation({
-      variables: {
-        sneaker_id: item.id,
-      },
-    });
+  // const handleAddToCart = (item: AddCartItem ) => {
+  //   addToCartMutation({
+  //     variables: {
+  //       sneaker_id: item.id,
+  //       quantity: item.lastQuantity + 1,
+  //       price: item.price,
+  //     },
+  //   });
+  //   client.refetchQueries({
+  //     include: ['GET_ALL_ITEMS']
+  //   })
+  // };
+
+  const handleAddToCart = async (item: AddCartItem) => {
+    try {
+      await addToCartMutation({
+        variables: {
+          sneaker_id: item.id,
+          quantity: item.lastQuantity + 1,
+          price: item.price,
+        },
+      });
+
+      await client.refetchQueries({
+        include: ["MyQuery"],
+      });
+    } catch (error) {
+      console.error("❌ Error adding to cart:", error);
+      alert("Сталася помилка при додаванні до кошика. Перевірте консоль.");
+    }
   };
 
-  const handleRemove = (id: string) => {};
+  const handleRemove = async (id: string) => {
+    try {
+      await removeItemFromCartMutation({
+        variables: {
+          sneaker_id: id,
+        }
+      });
+
+      await client.refetchQueries({
+        include: ["MyQuery"],
+      });
+    } catch (error) {
+      console.error("❌ Error remove from cart:", error);
+      alert("Сталася помилка при видаленні з  кошика. Перевірте консоль.");
+    }
+  };
+
+  // useEffect(() => {
+  //   console.log('restarting useEffect')
+  //   if (!data) {
+  //     loadSneakers();
+  //   }
+
+  //   if (debouncedSearchTerm) {
+  //     loadSneakers();
+  //   }
+  // }, [debouncedSearchTerm]);
 
   useEffect(() => {
-    if (!data) {
-      loadSneakers();
-    }
-
-    if (debouncedSearchTerm) {
-      loadSneakers();
-    }
-  }, [debouncedSearchTerm]);
+    loadSneakers();
+  }, [debouncedSearchTerm, cartItems, data]);
 
   if (loading) return <div>Завантаження....</div>;
 
@@ -63,22 +121,35 @@ function App() {
           path="/"
           element={
             <div>
-              <Drawer
-                items={cartItems}
-                onClose={() => {}}
-                onRemove={handleRemove}
-                opened={false}
-              />
-              <Header onClickCart={() => {}} />
-              <Home
-                items={data?.items || []}
-                searchValue={searchValue}
-                setSearchValue={setSearchValue}
-                onChangeSearchInput={handleChangeInput}
-                onAddToFavorite={() => {}}
-                onAddToCart={handleAddToCart}
-                isLoading={loading}
-              />
+              <AppContext.Provider
+                value={{
+                  cartItems: cartItems?.cart || [],
+                  setCartItem: handleAddToCart,
+                }}
+              >
+                <Drawer
+                  items={cartItems?.cart || []}
+                  onClose={() => {
+                    setDrawerOpened(false);
+                  }}
+                  onRemove={handleRemove}
+                  opened={drawerOpened}
+                />
+                <Header
+                  onClickCart={() => {
+                    setDrawerOpened(true);
+                  }}
+                />
+                <Home
+                  items={data?.items || []}
+                  searchValue={searchValue}
+                  setSearchValue={setSearchValue}
+                  onChangeSearchInput={handleChangeInput}
+                  onAddToFavorite={() => {}}
+                  onAddToCart={handleAddToCart}
+                  isLoading={loading}
+                />
+              </AppContext.Provider>
             </div>
           }
         />

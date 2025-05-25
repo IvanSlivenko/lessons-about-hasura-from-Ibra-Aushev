@@ -14,6 +14,7 @@ type Props = {
   onPlus: () => void;
   favorited: boolean;
   loading: boolean;
+  isItemAdded: boolean;
 };
 
 function Card({
@@ -23,13 +24,15 @@ function Card({
   price,
   onFavorite,
   onPlus,
+  isItemAdded,
   favorited = false,
   loading = false,
 }: Props) {
   // const { isItemAdded } = React.useContext(AppContext);
-  const isItemAdded = false;
+  // const isItemAdded = true;
   const [isFavorite, setIsFavorite] = React.useState(favorited);
   const obj = { id, parentId: id, title, imageUrl, price };
+
 
   const onClickPlus = () => {
     onPlus();
@@ -59,37 +62,23 @@ function Card({
         </ContentLoader>
       ) : (
         <>
-          {!onFavorite && (
-            <div className={styles.favorite} onClick={onClickFavorite}>
-              <img
-                src={isFavorite ? "/img/liked.svg" : "img/unliked.svg"}
-                alt="Unliked"
-              />
-            </div>
-          )}
           <div
             style={{
               display: "flex",
-              justifyContent: "center", // центрування по горизонталі
+              justifyContent: "flex-start", // центрування по горизонталі
               alignItems: "center", // вирівнювання по вертикалі
               gap: "10px", // відстань між іконками
-              paddingBottom: "7px"
+              paddingBottom: "20px",
             }}
           >
-            <img src={"/img/liked.svg"} alt="liked" />
-            <img src={"img/unliked.svg"} alt="Unliked" />
-            <img
-              className={styles.plus}
-              onClick={onClickPlus}
-              src={"/img/btn-checked.svg"}
-              alt="Plus"
-            />
-            <img
-              className={styles.plus}
-              onClick={onClickPlus}
-              src={"img/btn-plus.svg"}
-              alt="Plus"
-            />
+            {
+              <div className={styles.favorite} onClick={onClickFavorite}>
+                <img
+                  src={isFavorite ? "/img/liked.svg" : "/img/unliked.svg"}
+                  alt="Unliked"
+                />
+              </div>
+            }
           </div>
 
           <img width="100%" height={135} src={imageUrl} alt="Sneakers" />
@@ -99,14 +88,14 @@ function Card({
               <span>Ціна:</span>
               <b>{price} грн.</b>
             </div>
-            {!onPlus && (
+            {
               <img
                 className={styles.plus}
                 onClick={onClickPlus}
-                src={isItemAdded ? "/img/btn-checked.svg" : "img/btn-plus.svg"}
+                src={isItemAdded ? "/img/btn-checked.svg" : "/img/btn-plus.svg"}
                 alt="Plus"
               />
-            )}
+            }
           </div>
         </>
       )}

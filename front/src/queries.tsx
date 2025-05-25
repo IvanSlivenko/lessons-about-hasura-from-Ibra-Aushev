@@ -16,9 +16,10 @@ export const GET_CART = gql`
     cart {
       id
       quantity
+      price
       sneaker: item {
         id
-        imageUrl: image_url
+        image_url
         price
         title
       }
@@ -27,13 +28,22 @@ export const GET_CART = gql`
 `;
 
 export const ADD_ITEM_TO_CART = gql`
-  mutation MyMutation($sneaker_id: uuid) {
+  mutation MyMutation($sneaker_id: uuid, $quantity: Int!, $price: Int! ) {
     delete_cart(where: { sneaker_id: { _eq: $sneaker_id } }) {
       affected_rows
     }
-    insert_cart_one(object: { quantity: 1, sneaker_id: $sneaker_id }) {
+    insert_cart_one(object: { quantity: $quantity, sneaker_id: $sneaker_id, price: $price }) {
       id
     }
+  }
+`;
+
+export const REMOVE_ITEM_FROM_CART = gql`
+  mutation RemoveItemFromCart($sneaker_id: uuid) {
+    delete_cart(where: { sneaker_id: { _eq: $sneaker_id } }) {
+      affected_rows
+    }
+
   }
 `;
 
