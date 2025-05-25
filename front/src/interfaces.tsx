@@ -25,3 +25,7 @@ export interface AddCartItem {
   lastQuantity: number;
   price: number;
 }
+
+export interface FavoriteItem {
+  favorites: Array<{sneaker_Id: string}>
+}

@@ -1,21 +1,23 @@
 import React from "react";
 
 import Card from "../components/Card";
-import { AddCartItem, CartItem, Items, Sneakers } from "../interfaces"
+import { AddCartItem, CartItem, FavoriteItem, Items, Sneakers } from "../interfaces"
 import { useCart } from "../hooks/useCart";
 
 type Props = {
   items:  Sneakers[]
+  favoritedItems: Array<{sneaker_Id: string}>
   searchValue: string;
   setSearchValue: (value: string)=> void;
   onChangeSearchInput: (value: string)=> void;
-  onAddToFavorite: (value: string)=> void;
+  onAddToFavorite: (sneaker_Id: string)=> void;
   onAddToCart: (value: AddCartItem)=> void;
   isLoading: boolean;
 };
 
 function Home({
   items,
+  favoritedItems,
   searchValue,
   setSearchValue,
   onChangeSearchInput,
@@ -46,11 +48,13 @@ function Home({
     return (isLoading ? [...Array(8)] : filtredItems).map((item, index) => (
       <Card
         key={index}
-        onFavorite={() => onAddToFavorite(item)}
+        onFavorite={() => onAddToFavorite(item.id)}
         onPlus={() => onAddToCart(makeComposeSneakerAndCartObject(item))}
         loading={isLoading}
-        isItemAdded={cartItems.filter(filteritem => filteritem.sneaker.id === item.id).length}
         {...item}
+        isItemAdded={cartItems.filter(filterItem => filterItem.sneaker.id === item.id).length}
+        favorited = {favoritedItems.filter(filterItem => filterItem.sneaker_Id === item.id).length}
+        
       />
     ));
   };

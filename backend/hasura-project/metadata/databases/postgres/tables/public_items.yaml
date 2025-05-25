@@ -1,3 +1,11 @@
 table:
   name: items
   schema: public
+array_relationships:
+  - name: favorites
+    using:
+      foreign_key_constraint_on:
+        column: sneaker_id
+        table:
+          name: favorites
+          schema: public

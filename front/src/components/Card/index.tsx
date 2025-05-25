@@ -71,13 +71,13 @@ function Card({
               paddingBottom: "20px",
             }}
           >
-            {
-              <div className={styles.favorite} onClick={onClickFavorite}>
+            { !favorited &&
+              (<div className={styles.favorite} onClick={onClickFavorite}>
                 <img
                   src={isFavorite ? "/img/liked.svg" : "/img/unliked.svg"}
                   alt="Unliked"
                 />
-              </div>
+              </div>)
             }
           </div>
 
