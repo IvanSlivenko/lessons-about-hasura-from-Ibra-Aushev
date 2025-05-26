@@ -17,6 +17,7 @@ import {
   REMOVE_ITEM_FROM_CART,
   ADD_TO_FAVORITE,
   GET_ALL_FAVORITES,
+  REMOVE_FROM_FAVORITE,
 } from "./queries";
 import Home from "./pages/Home";
 
@@ -44,6 +45,7 @@ function App() {
   const [addToCartMutation] = useMutation(ADD_ITEM_TO_CART);
   const [removeItemFromCartMutation] = useMutation(REMOVE_ITEM_FROM_CART);
   const [addToFavoriteMutation] = useMutation(ADD_TO_FAVORITE);
+  const [removeFromFavoriteMutation] = useMutation(REMOVE_FROM_FAVORITE);
 
   const handleChangeInput = (value: string) => setSearchValue(value);
 
@@ -62,6 +64,14 @@ function App() {
 
   const handleAddToCart = async (item: AddCartItem) => {
     try {
+      const existingItem = cartItems?.cart.find(
+        (cartItem) => cartItem.sneaker.id === item.id
+      );
+
+      if (existingItem) {
+        await handleRemove(item.id);
+        return;
+      }
       await addToCartMutation({
         variables: {
           sneaker_id: item.id,
@@ -96,17 +106,40 @@ function App() {
     }
   };
 
-  const handleAddTofavorite = async (sneaker_Id: string) => {
+  const handleRemoveFromFavorite = async (sneaker_id: string) => {
     try {
-      await addToFavoriteMutation({
+      await removeFromFavoriteMutation({
         variables: {
-          sneaker_id: sneaker_Id, // ← Назва має збігатися з GraphQL-маркером
+          sneaker_id: sneaker_id,
         },
       });
 
-      // await client.refetchQueries({
-      //   include: ["MyQuery"],
-      // });
+      await client.refetchQueries({
+        include: ["getAllFavorites"],
+      });
+    } catch (error) {
+      console.error("❌ Error remove from cart:", error);
+      alert("Сталася помилка при видаленні з  кошика. Перевірте консоль.");
+    }
+  };
+
+  const handleAddTofavorite = async (sneaker_id: string) => {
+    try {
+      if (
+        favoriteItems?.favorites.find((favoriteItem) => favoriteItem.sneaker_id === sneaker_id)
+      ) {
+        await handleRemoveFromFavorite(sneaker_id);
+        return;
+      }
+      await addToFavoriteMutation({
+        variables: {
+          sneaker_id: sneaker_id, // ← Назва має збігатися з GraphQL-маркером
+        },
+      });
+
+      await client.refetchQueries({
+        include: ["getAllFavorites"],
+      });
     } catch (error) {
       console.error("❌ Error add to Favorite:", error);
       alert("Сталася помилка при додаванні до Обраних. Перевірте консоль.");

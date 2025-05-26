@@ -28,7 +28,7 @@ export const GET_CART = gql`
 `;
 
 export const ADD_ITEM_TO_CART = gql`
-  mutation MyMutation($sneaker_id: uuid, $quantity: Int!, $price: Int!) {
+  mutation MyMutation($sneaker_id: uuid!, $quantity: Int!, $price: Int!) {
     delete_cart(where: { sneaker_id: { _eq: $sneaker_id } }) {
       affected_rows
     }
@@ -59,8 +59,16 @@ export const ADD_TO_FAVORITE = gql`
   }
 `;
 
+export const REMOVE_FROM_FAVORITE = gql`
+  mutation RemoveFromFavorites($sneaker_id: uuid!) {
+    delete_favorites(where: { sneaker_id: { _eq: $sneaker_id } }) {
+      affected_rows
+    }
+  }
+`;
+
 export const GET_ALL_FAVORITES = gql`
-  query getallFavorites {
+  query getAllFavorites {
     favorites {
       id
       sneaker_id

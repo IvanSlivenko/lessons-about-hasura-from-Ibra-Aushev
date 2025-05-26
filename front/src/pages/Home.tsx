@@ -6,11 +6,11 @@ import { useCart } from "../hooks/useCart";
 
 type Props = {
   items:  Sneakers[]
-  favoritedItems: Array<{sneaker_Id: string}>
+  favoritedItems: Array<{sneaker_id: string}>
   searchValue: string;
   setSearchValue: (value: string)=> void;
   onChangeSearchInput: (value: string)=> void;
-  onAddToFavorite: (sneaker_Id: string)=> void;
+  onAddToFavorite: (sneaker_id: string)=> void;
   onAddToCart: (value: AddCartItem)=> void;
   isLoading: boolean;
 };
@@ -41,10 +41,7 @@ function Home({
 
 
   const renderItems = () => {
-    const filtredItems = items.filter((item) =>
-      // item.title.toLowerCase().includes(searchValue.toLowerCase())
-    true
-    );
+    const filtredItems = items.filter((item) =>true);
     return (isLoading ? [...Array(8)] : filtredItems).map((item, index) => (
       <Card
         key={index}
@@ -53,7 +50,7 @@ function Home({
         loading={isLoading}
         {...item}
         isItemAdded={cartItems.filter(filterItem => filterItem.sneaker.id === item.id).length}
-        favorited = {favoritedItems.filter(filterItem => filterItem.sneaker_Id === item.id).length}
+        favorited = {favoritedItems.filter(filterItem => filterItem.sneaker_id === item.id).length}
         
       />
     ));

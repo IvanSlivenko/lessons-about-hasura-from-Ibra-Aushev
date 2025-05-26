@@ -27,5 +27,5 @@ export interface AddCartItem {
 }
 
 export interface FavoriteItem {
-  favorites: Array<{sneaker_Id: string}>
+  favorites: Array<{sneaker_id: string}>
 }
